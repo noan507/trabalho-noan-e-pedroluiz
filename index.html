@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro de Tarefas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Fotos dos alunos -->
+    <div class="fotos">
+      <img src="img.jpg" alt="Foto do Noan e Pedro Luiz" style="max-width: 200px; border-radius: 8px;" />
+      <!-- Se quiser adicionar mais fotos, só duplicar a linha abaixo e trocar o src e alt -->
+      <!-- <img src="foto2.jpg" alt="Outra foto" /> -->
+    </div>
+
+    <!-- Título padrão -->
+    <h1>CADASTRO DE TAREFAS EM SQLITE DE NOAN E PEDRO LUIZ</h1>
+
+    <form id="tarefa-form">
+      <input type="text" id="nomeAluno" name="nomeAluno" placeholder="Nome do aluno" required />
+      <input type="text" id="descricao" name="descricao" placeholder="Descrição" required />
+      <input type="text" id="responsavel" name="responsavel" placeholder="Responsável" required />
+      <button type="submit">Adicionar Tarefa</button>
+    </form>
+
+    <h3>Resumo</h3>
+    <div id="resumo-status">Pendente: 0 | Em Andamento: 0 | Concluída: 0</div>
+
+    <table id="tabela-tarefas" border="1" cellpadding="8" cellspacing="0" style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Responsável</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
