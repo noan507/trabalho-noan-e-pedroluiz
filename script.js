@@ -1,47 +1,18 @@
-// script.js
-
 const form = document.getElementById('tarefa-form');
 const tabelaBody = document.querySelector('#tabela-tarefas tbody');
 const resumoStatus = document.getElementById('resumo-status');
 
-let tarefas = [];
+let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  // Pega os valores dos inputs
-  const nomeAluno = form.nomeAluno.value.trim();
-  const descricao = form.descricao.value.trim();
-  const responsavel = form.responsavel.value.trim();
-
-  if (!nomeAluno || !descricao || !responsavel) {
-    alert('Por favor, preencha todos os campos!');
-    return;
-  }
-
-  // Cria a nova tarefa com status padrão "Pendente"
-  const tarefa = {
-    id: Date.now(),
-    titulo: descricao,
-    responsavel: responsavel,
-    status: 'Pendente'
-  };
-
-  tarefas.push(tarefa);
-  atualizarTabela();
-  atualizarResumo();
-
-  // Limpa o formulário
-  form.reset();
-  form.nomeAluno.focus();
-});
+function salvarTarefasNoStorage() {
+  localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
 
 function atualizarTabela() {
-  tabelaBody.innerHTML = ''; // limpa tabela
+  tabelaBody.innerHTML = '';
 
   tarefas.forEach(tarefa => {
     const tr = document.createElement('tr');
-
     tr.innerHTML = `
       <td>${tarefa.titulo}</td>
       <td>${tarefa.responsavel}</td>
@@ -51,7 +22,6 @@ function atualizarTabela() {
         <button onclick="removerTarefa(${tarefa.id})">Remover</button>
       </td>
     `;
-
     tabelaBody.appendChild(tr);
   });
 }
@@ -64,6 +34,34 @@ function atualizarResumo() {
   resumoStatus.textContent = `Pendente: ${pendente} | Em Andamento: ${andamento} | Concluída: ${concluida}`;
 }
 
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const nomeAluno = form.nomeAluno.value.trim();
+  const descricao = form.descricao.value.trim();
+  const responsavel = form.responsavel.value.trim();
+
+  if (!nomeAluno || !descricao || !responsavel) {
+    alert('Por favor, preencha todos os campos!');
+    return;
+  }
+
+  const tarefa = {
+    id: Date.now(),
+    titulo: descricao,
+    responsavel: responsavel,
+    status: 'Pendente'
+  };
+
+  tarefas.push(tarefa);
+  salvarTarefasNoStorage();
+  atualizarTabela();
+  atualizarResumo();
+
+  form.reset();
+  form.nomeAluno.focus();
+});
+
 window.mudarStatus = function(id) {
   const tarefa = tarefas.find(t => t.id === id);
   if (!tarefa) return;
@@ -72,12 +70,20 @@ window.mudarStatus = function(id) {
   else if (tarefa.status === 'Em Andamento') tarefa.status = 'Concluída';
   else tarefa.status = 'Pendente';
 
+  salvarTarefasNoStorage();
   atualizarTabela();
   atualizarResumo();
 }
 
 window.removerTarefa = function(id) {
   tarefas = tarefas.filter(t => t.id !== id);
+  salvarTarefasNoStorage();
+  atualizarTabela();
+  atualizarResumo();
+}
+
+// Carregar as tarefas ao abrir a página
+window.onload = function() {
   atualizarTabela();
   atualizarResumo();
 }
